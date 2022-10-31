@@ -12,13 +12,13 @@ import { Link } from '@inertiajs/inertia-vue3'
         </template>
 
         <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-              <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <Link href="/new-job">New Job</Link>
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex flex-row justify-evenly">
+              <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg hover:bg-teal-700 hover:text-white">
+                <Link href="/new-job" class="text-2xl block h-full w-full p-10">New Job</Link>
               </div>
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                  <Link href="/job-list">Job List</Link>
-                </div>
+              <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg hover:bg-teal-700 hover:text-white">
+                <Link href="/job-list" class="text-2xl block h-full w-full p-10">Job List</Link>
+              </div>
             </div>
         </div>
     </AppLayout>

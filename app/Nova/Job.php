@@ -5,6 +5,7 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Job extends Resource
@@ -44,6 +45,7 @@ class Job extends Resource
             ID::make()->sortable(),
             Text::make('Name')->sortable(),
             Text::make('CSV File Name', 'csvFileName')->sortable(),
+            Number::make('Bin')->sortable(),
         ];
     }
 

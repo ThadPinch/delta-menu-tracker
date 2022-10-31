@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes allocate-pulse {
+	0% { background-color: #fff; }
+	50% { background-color: #32a852; }
+	100% { background-color: #fff; }
+}
+
+@keyframes deallocate-pulse {
+	0% { background-color: #fff; }
+	50% { background-color: #e6404b; }
+	100% { background-color: #fff; }
+}
+
+.allocate-pulse {
+	animation: allocate-pulse 1s forwards;
+}
+
+.deallocate-pulse {
+	animation: deallocate-pulse 1s forwards;
+}
+
+.max-h-custom {
+	max-height: 55vh;
+}

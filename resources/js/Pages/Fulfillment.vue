@@ -1,6 +1,34 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Link } from '@inertiajs/inertia-vue3'
+import { Inertia } from '@inertiajs/inertia'
+
+Inertia.on('finish', () => {
+  let urlParams = new URLSearchParams(window.location.search);
+  let options = ['allocated', 'deallocated'];
+  for (let option in options) {
+    if (urlParams.has(options[option])) {
+      let selectedID = document.getElementById(urlParams.get(options[option]));
+      if (selectedID) {
+        selectedID.scrollIntoView();
+        // pulseClass();
+        if (options[option] == 'allocated') {
+          selectedID.classList.remove('allocate-pulse')
+          selectedID.classList.add('allocate-pulse')
+          setTimeout(() => {
+            selectedID.classList.remove('allocate-pulse')
+          }, 1000);
+        } else {
+          selectedID.classList.remove('deallocate-pulse')
+          selectedID.classList.add('deallocate-pulse')
+          setTimeout(() => {
+            selectedID.classList.remove('deallocate-pulse')
+          }, 1000);
+        }
+      }
+    }
+  }
+})
 </script>
 
 <template>
@@ -12,36 +40,43 @@ import { Link } from '@inertiajs/inertia-vue3'
     </template>
 
     <div class="py-12">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div v-if="message">
-          <p>
-            {{ message }}
-          </p>
-        </div>
-        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg flex flex-row justify-evenly">
-          <div>
-            <form @submit.prevent="allocate">
-              <input type="text" v-model="allocation" name="allocation" id="allocation" @change="testing">
-              <button type="submit">Allocate</button>
-              <p>{{allocation}}</p>
-            </form>
+      <div class="w-full mx-auto sm:px-6 lg:px-8">
+        <div class="sticky bottom-0 py-3 bg-slate-100">
+          <div v-if="this.message" class="m-auto text-center text-xl">
+            <p>
+              {{ this.message }}
+            </p>
           </div>
-          <div>
-            <form @submit.prevent="deallocate">
-              <input type="text" :model="deallocation" name="deallocation" id="deallocation">
-              <button type="submit">Deallocate</button>
-            </form>
+          <div class="text-center">
+            <h2 class="text-2xl">{{ jobName }}</h2>
+            <p class="text-2xl">
+              {{ percent }}% Complete
+            </p>
+          </div>
+          <div class="overflow-hidden mb-4 sm:rounded-lg flex flex-row justify-evenly">
+            <div>
+              <form @submit.prevent="allocate">
+                <input type="text" v-model="allocation" ref="allocation" name="allocation" id="allocation" class="rounded-lg mx-2 shadow-md">
+                <button class="bg-emerald-500 hover:bg-emerald-700 text-white p-2 rounded-md" type="submit">Allocate</button>
+              </form>
+            </div>
+            <div>
+              <form @submit.prevent="deallocate">
+                <input type="text" v-model="deallocation" ref="deallocation" name="deallocation" id="deallocation" class="rounded-lg mx-2 shadow-md">
+                <button class="bg-red-500 hover:bg-red-700 text-white p-2 rounded-md" type="submit">Deallocate</button>
+              </form>
+            </div>
           </div>
         </div>
 <!--        This is the table     -->
         <div class="flex flex-col px-8" v-if="content">
-          <div class="-my-2 overflow-x-scroll sm:-mx-6 lg:-mx-8">
+          <div class="my-2 sm:-mx-6 lg:-mx-8">
             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
               <div
-                  class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
+                  class="shadow border-b border-gray-200 sm:rounded-lg overflow-scroll  max-w-7xl mx-auto max-h-custom" 
               >
                 <table class="min-w-full divide-y divide-gray-200">
-                  <thead class="bg-gray-50">
+                  <thead class="bg-gray-50 sticky top-0">
                   <tr>
                     <th
                         scope="col"
@@ -70,6 +105,20 @@ import { Link } from '@inertiajs/inertia-vue3'
                             "
                     >
                       Total Packs
+                    </th>
+                    <th
+                        scope="col"
+                        class="
+                                px-6
+                                py-3
+                                text-left text-xs
+                                font-medium
+                                text-gray-500
+                                uppercase
+                                tracking-wider
+                            "
+                    >
+                      Bin
                     </th>
                     <th
                         scope="col"
@@ -185,61 +234,66 @@ import { Link } from '@inertiajs/inertia-vue3'
                     </th>
                   </tr>
                   </thead>
-                  <tbody class="bg-white divide-y divide-gray-200">
-                  <tr v-for="row in content" :key="row.id">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">
-                        {{ row['allocated'] }}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">
-                        {{ row['packs'] }}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">
-                        {{ row['departure']}}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">
-                        {{ row['menu_type'] }}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">
-                        {{ row['lot_number'] }}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">
-                        {{ row['title']}}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">
-                        {{ row['print_quantity'] }}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">
-                        {{ row['flight_number'] }}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">
-                        {{ row['arrival']}}
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">
-                        {{ row['shipper']}}
-                      </div>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tr v-for="row in content" :key="row.id" :class="(row['allocated'] == row['packs'])? 'bg-emerald-200':''" :id="row['lot_number']" class="pt-5">
+                      <td class="px-6 pt-20 pb-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900 text-xl">
+                          {{ row['allocated'] }}
+                        </div>
+                      </td>
+                      <td class="px-6 pt-20 pb-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900 text-xl">
+                          {{ row['packs'] }}
+                        </div>
+                      </td>
+                      <td class="px-6 pt-20 pb-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900 text-xl">
+                          {{ (row['bin'] == null)? '-': row['bin'] }}
+                        </div>
+                      </td>
+                      <td class="px-6 pt-20 pb-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                          {{ row['departure']}}
+                        </div>
+                      </td>
+                      <td class="px-6 pt-20 pb-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                          {{ row['menu_type'] }}
+                        </div>
+                      </td>
+                      <td class="px-6 pt-20 pb-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                          {{ row['lot_number'] }}
+                        </div>
+                      </td>
+                      <td class="px-6 pt-20 pb-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                          {{ row['title']}}
+                        </div>
+                      </td>
+                      <td class="px-6 pt-20 pb-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                          {{ row['print_quantity'] }}
+                        </div>
+                      </td>
+                      <td class="px-6 pt-20 pb-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                          {{ row['flight_number'] }}
+                        </div>
+                      </td>
+                      <td class="px-6 pt-20 pb-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                          {{ row['arrival']}}
+                        </div>
+                      </td>
+                      <td class="px-6 pt-20 pb-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                          {{ row['shipper']}}
+                        </div>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
               </div>
             </div>
           </div>
@@ -250,48 +304,42 @@ import { Link } from '@inertiajs/inertia-vue3'
 </template>
 
 <script>
-import { useForm } from '@inertiajs/inertia-vue3'
 
 export default {
   data() {
     return {
-      allocation: "test",
-      deallocation: "test"
+      allocation: "",
+      deallocation: ""
     }
   },
   methods: {
     allocate() {
-      console.log('allocating')
-      console.log(this.allocation)
-      // return;
-      // Post the allocation to the server
+      // Post the allocation to the server then return to the same page
       this.$inertia.post('/allocate', {
         allocation: this.allocation,
         job: this.job
       })
+      this.allocation = '';
     },
     deallocate() {
-      console.log('deallocating')
-      console.log(this.deallocation)
-      return;
       // Post the deallocation to the server
       this.$inertia.post('/deallocate', {
         deallocation: this.deallocation,
         job: this.job
       })
+      this.deallocation = '';
+    this.$refs.allocation.focus()
     },
-    testing() {
-      console.log(this.allocation)
-    }
   },
   props: {
-    job: Number,
-    content: String,
-    message: String
+    job: String,
+    jobName: String,
+    content: Object,
+    message: String,
+    percent: String,
   },
   mounted() {
-    console.log('mounted')
-    console.log('content', this.content)
+    this.$refs.allocation.focus()
   }
 }
 </script>

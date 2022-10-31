@@ -44,6 +44,8 @@ class Flight extends Resource
     {
         return [
             ID::make()->sortable(),
+            Number::make('Bin')->sortable(),
+            Number::make('Allocated')->sortable(),
             Text::make('Departure')->sortable(),
             Text::make('Menu Type')->sortable(),
             Text::make('Lot Number')->sortable(),
@@ -53,7 +55,6 @@ class Flight extends Resource
             Text::make('Flight Number')->sortable(),
             Text::make('Arrival')->sortable(),
             Text::make('Shipper')->sortable(),
-            Number::make('Allocated')->sortable(),
             BelongsTo::make('Job'),
         ];
     }
