@@ -42,9 +42,9 @@ Inertia.on('finish', () => {
     <div class="py-12">
       <div class="w-full mx-auto sm:px-6 lg:px-8">
         <div class="sticky bottom-0 py-3 bg-slate-100">
-          <div v-if="this.message" class="m-auto text-center text-xl">
+          <div v-if="message" class="m-auto text-center text-xl">
             <p>
-              {{ this.message }}
+              {{ message }}
             </p>
           </div>
           <div class="text-center">
